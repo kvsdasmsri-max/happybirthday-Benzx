@@ -73,6 +73,13 @@
       justify-content:center;
       font-size:36px;
       color:#aaa;
+      overflow:hidden;
+    }
+    .slide img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
     .nav{
       position:absolute;top:50%;transform:translateY(-50%);
@@ -89,7 +96,7 @@
       margin:8px 0 24px;
     }
     .dot{
-      width:6px;height:6px;border-radius:50%;background:#ccc;
+      width:8px;height:8px;border-radius:50%;background:#ccc;
     }
     .dot.active{background:#888}
     .story{
@@ -162,7 +169,7 @@
     <div class="player">
       <div style="font-size:12px;margin-bottom:6px">🎧 เพลงนี้อยากให้ฟัง</div>
       <audio controls preload="metadata" playsinline controlslist="nodownload" style="width:100%">
-        <source src="https://raw.githubusercontent.com/kvsdasmri-max/happybirthday-Benzx/main/bc47723d-98c4-40c1-b848-69128f9b9a70.mp3" type="audio/mpeg">
+        <source src="https://raw.githubusercontent.com/kvsdasmsri-max/happybirthday-Benzx/main/bc47723d-98c4-40c1-b848-69128f9b9a70.mp3" type="audio/mpeg">
         เบราว์เซอร์ของคุณไม่รองรับการเล่นเพลง
       </audio>
       <div style="font-size:11px;margin-top:6px">เปิดแล้วนึกถึงคุณ 💗</div>
@@ -173,10 +180,10 @@
 
   <section class="carousel reveal fade-left">
     <div class="slides" id="slides">
-      <div class="slide"><img src="https://pic.in.th/image/Gemini-Generated-Image-74wawc74wawc74wa.nnmrny" alt="photo1" /></div>
-      <div class="slide"><img src="https://pic.in.th/image/IMG-20250106-124329-262.nnmaFH" alt="photo2" /></div>
-      <div class="slide"><img src="https://pic.in.th/image/IMG-20250309-193243-390.nnmdon" alt="photo3" /></div>
-      <div class="slide"><img src="https://pic.in.th/image/IMG-20251022-223708-566.nnmMKM" alt="photo4" /></div>
+      <div class="slide"><img src="https://pic.in.th/image/IMG-20251022-223708-566.nn3C0f" alt="photo1" /></div>
+      <div class="slide"><img src="https://pic.in.th/image/IMG-20250309-193243-390.nn3OaM" alt="photo2" /></div>
+      <div class="slide"><img src="https://pic.in.th/image/IMG-20250106-124329-262.nnmaFH" alt="photo3" /></div>
+      <div class="slide"><img src="https://pic.in.th/image/Gemini-Generated-Image-74wawc74wawc74wa.nnmrny" alt="photo4" /></div>
     </div>
     <button class="nav prev" onclick="move(-1)">‹</button>
     <button class="nav next" onclick="move(1)">›</button>
@@ -188,25 +195,12 @@
     <div class="dot"></div>
     <div class="dot"></div>
   </div>
-    <div class="dot"></div>
-  </div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-  </div>
-    <div class="dot"></div>
-  </div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-  </div>
-
-  
 
   <section class="story reveal">
     <p>
       สุขสันต์วันเกินที่รัก! ปีนี้อายุ25ปี<br><br>
-      แล้วขอให้วันเกิดปีนี้เป็นปีที่ดีที่สุดสำหลับเอง เต็มไปด้วยความสุข ความสำเร็จ
-      และสิ่งดีๆที่จะเกิดขึ้นในทุกๆวัน ขอให้เองมีสุขภาพดี และก้าวไปสู่ความฝันที่ตั้งใจไว้
+      แล้วขอให้วันเกิดปีนี้เป็นปีที่ดีที่สุดสำหลับเอง เต็มไปด้วยความสุข [...]
+      และสิ่งดีๆที่จะเกิดขึ้นในทุกๆวัน ขอให้เองมีสุขภาพดี และก้าวไปสู่คว[...]
       ทุกสิ่งที่เองตั้งใจจะประสบความสำเร็จเสมอไป<br><br>
       รักเองมากๆนะ🤍💐
     </p>
@@ -261,6 +255,15 @@
       slides.style.transform = `translateX(-${index*100}%)`;
       dots.forEach((d,i)=>d.classList.toggle('active', i===index));
     }
+
+    // allow clicking dots to jump
+    document.querySelectorAll('.dot').forEach((d,i)=>{
+      d.addEventListener('click', ()=> {
+        index = i;
+        slides.style.transform = `translateX(-${index*100}%)`;
+        dots.forEach((dot,idx)=>dot.classList.toggle('active', idx===index));
+      });
+    });
   </script>
 
   <!-- scroll reveal -->
