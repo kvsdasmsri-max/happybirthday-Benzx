@@ -97,6 +97,7 @@
     }
     .dot{
       width:8px;height:8px;border-radius:50%;background:#ccc;
+      cursor:pointer;
     }
     .dot.active{background:#888}
     .story{
@@ -162,7 +163,7 @@
 </head>
 <body>
   <header class="reveal header-reveal">
-    <div class="avatar">🎂</div>
+    <div class="avatar" aria-hidden="true">🎂</div>
     <h1>Happy Birthday</h1>
     <div class="subtitle">Benzx💐</div>
 
@@ -178,31 +179,31 @@
 
   <div class="camera">📷</div>
 
-  <section class="carousel reveal fade-left">
+  <section class="carousel reveal fade-left" aria-roledescription="carousel">
     <div class="slides" id="slides">
       <div class="slide"><img src="https://pic.in.th/image/IMG-20251022-223708-566.nn3C0f" alt="photo1" /></div>
       <div class="slide"><img src="https://pic.in.th/image/IMG-20250309-193243-390.nn3OaM" alt="photo2" /></div>
       <div class="slide"><img src="https://pic.in.th/image/IMG-20250106-124329-262.nnmaFH" alt="photo3" /></div>
       <div class="slide"><img src="https://pic.in.th/image/Gemini-Generated-Image-74wawc74wawc74wa.nnmrny" alt="photo4" /></div>
     </div>
-    <button class="nav prev" onclick="move(-1)">‹</button>
-    <button class="nav next" onclick="move(1)">›</button>
+    <button class="nav prev" aria-label="Previous slide" onclick="move(-1)">‹</button>
+    <button class="nav next" aria-label="Next slide" onclick="move(1)">›</button>
   </section>
 
-  <div class="dots" id="dots">
-    <div class="dot active"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
+  <div class="dots" id="dots" role="tablist" aria-label="slide dots">
+    <div class="dot active" role="tab" aria-selected="true" tabindex="0"></div>
+    <div class="dot" role="tab" aria-selected="false" tabindex="0"></div>
+    <div class="dot" role="tab" aria-selected="false" tabindex="0"></div>
+    <div class="dot" role="tab" aria-selected="false" tabindex="0"></div>
   </div>
 
   <section class="story reveal">
     <p>
-      สุขสันต์วันเกินที่รัก! ปีนี้อายุ25ปี<br><br>
-      แล้วขอให้วันเกิดปีนี้เป็นปีที่ดีที่สุดสำหลับเอง เต็มไปด้วยความสุข [...]
-      และสิ่งดีๆที่จะเกิดขึ้นในทุกๆวัน ขอให้เองมีสุขภาพดี และก้าวไปสู่คว[...]
-      ทุกสิ่งที่เองตั้งใจจะประสบความสำเร็จเสมอไป<br><br>
-      รักเองมากๆนะ🤍💐
+      สุขสันต์วันเกิดที่รัก! ปีนี้อายุ 25 ปี<br><br>
+      ขอให้วันเกิดปีนี้เป็นปีที่ดีที่สุดสำ��รับเธอ เต็มไปด้วยความสุข
+      และสิ่งดีๆ ที่จะเกิดขึ้นในทุกๆ วัน ขอให้เธอมีสุขภาพที่แข็งแรง
+      และก้าวไปสู่ความสำเร็จในทุกสิ่งที่ตั้งใจไว้<br><br>
+      รักเธอมากๆ นะ 🤍💐
     </p>
   </section>
 
@@ -212,22 +213,31 @@
 
   <!-- effects -->
   <script>
-    // floating hearts (auto – soft)
+    // floating hearts (auto – soft) — improved: limit + cleanup
     let heartCount = 0;
     const MAX_HEARTS = 6; // จำกัดจำนวนหัวใจบนจอ
+    const HEART_LIFETIME = 12000;
+    let heartIntervalId = null;
+
     function createHeart(){
       if(heartCount >= MAX_HEARTS) return;
       const heart = document.createElement('div');
       heart.className = 'heart';
-      heart.textContent = ['💗','💕'][Math.floor(Math.random()*2)];
+      const choices = ['💗','💕','💖'];
+      heart.textContent = choices[Math.floor(Math.random()*choices.length)];
       heart.style.left = Math.random()*100 + 'vw';
-      heart.style.fontSize = 14 + Math.random()*4 + 'px';
-      heart.style.animationDuration = 9 + Math.random()*3 + 's';
+      heart.style.fontSize = 14 + Math.random()*8 + 'px';
+      heart.style.animationDuration = 8 + Math.random()*4 + 's';
       document.body.appendChild(heart);
       heartCount++;
-      setTimeout(()=>{ heart.remove(); heartCount--; },12000);
+      setTimeout(()=>{ 
+        if(heart.parentNode) heart.remove(); 
+        heartCount = Math.max(0, heartCount-1); 
+      }, HEART_LIFETIME);
     }
-    setInterval(createHeart, 2000);
+
+    // start hearts, keep id to allow cleanup if needed
+    heartIntervalId = setInterval(createHeart, 2000);
 
     // confetti on load
     for(let i=0;i<24;i++){
@@ -237,48 +247,77 @@
         c.style.position='fixed';
         c.style.top='-20px';
         c.style.left=Math.random()*100+'vw';
-        c.style.fontSize='18px';
+        c.style.fontSize=14 + Math.random()*10 + 'px';
         c.style.animation='floatUp 5s linear forwards';
         c.style.pointerEvents='none';
         document.body.appendChild(c);
-        setTimeout(()=>c.remove(),5000);
+        setTimeout(()=>{ if(c.parentNode) c.remove(); },5000);
       }, i*120);
     }
+
+    // stop intervals/cleanup when leaving page (optional safety)
+    window.addEventListener('beforeunload', ()=>{
+      if(heartIntervalId) clearInterval(heartIntervalId);
+    });
   </script>
 
   <script>
     let index = 0;
     const slides = document.getElementById('slides');
-    const dots = document.querySelectorAll('.dot');
-    function move(step){
-      index = (index + step + dots.length) % dots.length;
+    const dots = Array.from(document.querySelectorAll('.dot'));
+
+    function updateCarousel() {
       slides.style.transform = `translateX(-${index*100}%)`;
-      dots.forEach((d,i)=>d.classList.toggle('active', i===index));
+      dots.forEach((d,i)=>{
+        const active = i === index;
+        d.classList.toggle('active', active);
+        d.setAttribute('aria-selected', active ? 'true' : 'false');
+        d.tabIndex = active ? 0 : 0;
+      });
     }
 
-    // allow clicking dots to jump
-    document.querySelectorAll('.dot').forEach((d,i)=>{
+    function move(step){
+      index = (index + step + dots.length) % dots.length;
+      updateCarousel();
+    }
+
+    // allow clicking / keyboard on dots to jump
+    dots.forEach((d,i)=>{
       d.addEventListener('click', ()=> {
         index = i;
-        slides.style.transform = `translateX(-${index*100}%)`;
-        dots.forEach((dot,idx)=>dot.classList.toggle('active', idx===index));
+        updateCarousel();
+      });
+      d.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          index = i;
+          updateCarousel();
+        }
       });
     });
+
+    // optional: auto-advance (commented out)
+    // setInterval(()=> move(1), 6000);
   </script>
 
   <!-- scroll reveal -->
   <script>
     const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          entry.target.classList.add('show');
-          observer.unobserve(entry.target);
-        }
-      });
-    },{threshold:0.15});
 
-    reveals.forEach(el=>observer.observe(el));
+    if('IntersectionObserver' in window){
+      const observer = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('show');
+            observer.unobserve(entry.target);
+          }
+        });
+      },{threshold:0.15});
+      reveals.forEach(el=>observer.observe(el));
+    } else {
+      // fallback: reveal immediately if IntersectionObserver not supported
+      reveals.forEach(el=>el.classList.add('show'));
+    }
   </script>
 </body>
 </html>
