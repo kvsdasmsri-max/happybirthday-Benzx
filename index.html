@@ -64,6 +64,7 @@
     .slides{
       display:flex;
       transition:transform .35s ease;
+      will-change:transform;
     }
     .slide{
       min-width:100%;
@@ -73,6 +74,13 @@
       justify-content:center;
       font-size:36px;
       color:#aaa;
+      overflow:hidden;
+    }
+    .slide img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
     .nav{
       position:absolute;top:50%;transform:translateY(-50%);
@@ -81,6 +89,8 @@
       width:32px;height:32px;
       cursor:pointer;
       font-size:18px;
+      line-height:0;
+      display:flex;align-items:center;justify-content:center;
     }
     .prev{left:6px}
     .next{right:6px}
@@ -89,7 +99,8 @@
       margin:8px 0 24px;
     }
     .dot{
-      width:6px;height:6px;border-radius:50%;background:#ccc;
+      width:8px;height:8px;border-radius:50%;background:#ccc;
+      cursor:pointer;
     }
     .dot.active{background:#888}
     .story{
@@ -178,41 +189,19 @@
       <div class="slide"><img src="https://pic.in.th/image/IMG-20250309-193243-390.nnmdon" alt="photo3" /></div>
       <div class="slide"><img src="https://pic.in.th/image/IMG-20251022-223708-566.nnmMKM" alt="photo4" /></div>
     </div>
-    <button class="nav prev" onclick="move(-1)">‹</button>
-    <button class="nav next" onclick="move(1)">›</button>
+    <button class="nav prev" id="prevBtn" aria-label="Previous slide">‹</button>
+    <button class="nav next" id="nextBtn" aria-label="Next slide">›</button>
   </section>
 
-  <div class="dots" id="dots">
-    <div class="dot active"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-  </div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-  </div>
-    <div class="dot"></div>
-  </div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-  </div>
-    <div class="dot"></div>
-  </div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-  </div>
-
-  
+  <div class="dots" id="dots" aria-hidden="false"></div>
 
   <section class="story reveal">
     <p>
-      สุขสันต์วันเกินที่รัก! ปีนี้อายุ25ปี<br><br>
-      แล้วขอให้วันเกิดปีนี้เป็นปีที่ดีที่สุดสำหลับเอง เต็มไปด้วยความสุข ความสำเร็จ
-      และสิ่งดีๆที่จะเกิดขึ้นในทุกๆวัน ขอให้เองมีสุขภาพดี และก้าวไปสู่ความฝันที่ตั้งใจไว้
-      ทุกสิ่งที่เองตั้งใจจะประสบความสำเร็จเสมอไป<br><br>
-      รักเองมากๆนะ🤍💐
+      สุขสันต์วันเกิดที่รัก! ปีนี้อายุ 25 ปี<br><br>
+      ขอให้วันเกิดปีนี้เป็นปีที่ดีที่สุดของตัวเอง เต็มไปด้วยความสุข
+      และสิ่งดีๆ ที่จะเกิดขึ้นในทุกๆ วัน ขอให้มีสุขภาพแข็งแรง
+      และก้าวไปสู่ความสำเร็จในทุกความตั้งใจเสมอไป<br><br>
+      รักมากๆ นะ 🤍💐
     </p>
   </section>
 
@@ -257,14 +246,48 @@
   </script>
 
   <script>
+    // Slider: สร้าง dots ไดนามิกตามจำนวน slide และทำการย้าย slide
+    const slidesEl = document.getElementById('slides');
+    const dotsContainer = document.getElementById('dots');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
     let index = 0;
-    const slides = document.getElementById('slides');
-    const dots = document.querySelectorAll('.dot');
-    function move(step){
-      index = (index + step + dots.length) % dots.length;
-      slides.style.transform = `translateX(-${index*100}%)`;
-      dots.forEach((d,i)=>d.classList.toggle('active', i===index));
+    const slideCount = slidesEl ? slidesEl.children.length : 0;
+
+    // สร้าง dot ตามจำนวนสไลด์
+    if(dotsContainer && slideCount > 0){
+      for(let i=0;i<slideCount;i++){
+        const d = document.createElement('div');
+        d.className = 'dot' + (i===0 ? ' active' : '');
+        d.dataset.index = i;
+        d.addEventListener('click', ()=> moveTo(Number(d.dataset.index)));
+        dotsContainer.appendChild(d);
+      }
     }
+
+    function updateSlider(){
+      const dots = dotsContainer ? dotsContainer.querySelectorAll('.dot') : [];
+      if(slidesEl) slidesEl.style.transform = `translateX(-${index*100}%)`;
+      dots.forEach((d,i)=> d.classList.toggle('active', i===index));
+    }
+
+    function move(step){
+      if(slideCount === 0) return;
+      index = (index + step + slideCount) % slideCount;
+      updateSlider();
+    }
+    function moveTo(i){
+      if(slideCount === 0) return;
+      index = (i + slideCount) % slideCount;
+      updateSlider();
+    }
+
+    // ปุ่ม prev/next
+    if(prevBtn) prevBtn.addEventListener('click', ()=>move(-1));
+    if(nextBtn) nextBtn.addEventListener('click', ()=>move(1));
+
+    // ถ้าต้องการ autoplay (ไม่เปิดเป็นค่าเริ่มต้น) ให้เปิดใช้งานบรรทัดด้านล่าง
+    // setInterval(()=>move(1), 5000);
   </script>
 
   <!-- scroll reveal -->
