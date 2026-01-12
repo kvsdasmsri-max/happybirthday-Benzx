@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday 🎉</title>
+  <link href="https://fonts.googleapis.com/css2?family=Itim&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#fff7fb;
+      --pink:#ffb6c9;
+      --lav:#e6d9ff;
+      --text:#555;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Itim','Poppins',sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,var(--bg),#ffffff);
+      text-align:center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    header{
+      padding:32px 16px 16px;
+    }
+    .avatar{
+      width:64px;height:64px;
+      border-radius:50%;
+      background:#ffe3ec;
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 10px;
+      font-size:30px;
+    }
+    h1{
+      margin:0;
+      font-weight:600;
+      font-size:26px;
+      color:#6aa7ff;
+    }
+    .subtitle{
+      margin-top:6px;
+      font-size:13px;
+    }
+    .player{
+      margin:16px auto;
+      max-width:100%;
+      background:#fff;
+      border-radius:14px;
+      box-shadow:0 6px 20px rgba(0,0,0,.08);
+      padding:12px;
+    }
+    .player audio{width:100%}
+    .camera{font-size:20px;margin:12px 0}
+    .carousel{
+      width:100%;
+      max-width:100%;
+      margin:0 auto;
+      position:relative;
+      overflow:hidden;
+      border-radius:14px;
+      background:#eee;
+    }
+    .slides{
+      display:flex;
+      transition:transform .35s ease;
+    }
+    .slide{
+      min-width:100%;
+      height:240px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:36px;
+      color:#aaa;
+    }
+    .nav{
+      position:absolute;top:50%;transform:translateY(-50%);
+      background:rgba(255,255,255,.9);
+      border:none;border-radius:50%;
+      width:32px;height:32px;
+      cursor:pointer;
+      font-size:18px;
+    }
+    .prev{left:6px}
+    .next{right:6px}
+    .dots{
+      display:flex;gap:6px;justify-content:center;
+      margin:8px 0 24px;
+    }
+    .dot{
+      width:6px;height:6px;border-radius:50%;background:#ccc;
+    }
+    .dot.active{background:#888}
+    .story{
+      max-width:680px;
+      margin:0 auto 32px;
+      padding:0 16px;
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    /* scroll animation */
+    .reveal{
+      opacity:0;
+      transform:translateY(24px);
+      transition:opacity .7s ease, transform .7s cubic-bezier(.2,.6,.2,1);
+      will-change:opacity, transform;
+    }
+    .reveal.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    /* softer for top section */
+    .header-reveal{
+      transform:translateY(18px);
+      transition:opacity .9s ease, transform .9s ease;
+    }
+
+    .reveal.fade-left{ transform:translateX(-24px); }
+    .reveal.fade-right{ transform:translateX(24px); }
+    .reveal.show.fade-left,
+    .reveal.show.fade-right{ transform:translateX(0); }
+    footer{
+      margin-top:32px;
+      padding:14px 8px;
+      background:linear-gradient(90deg,var(--pink),var(--lav));
+      color:#fff;
+      font-size:12px;
+    }
+
+    /* tablet & up */
+    @media (min-width:768px){
+      h1{font-size:32px}
+      .slide{height:400px}
+      .player{max-width:360px}
+    }
+  
+    /* floating hearts */
+    .heart{
+      position:fixed;
+      bottom:-24px;
+      font-size:16px;
+      animation:floatUp 10s linear forwards;
+      pointer-events:none;
+      opacity:.6;
+      filter:drop-shadow(0 2px 4px rgba(0,0,0,.08));
+    }
+    @keyframes floatUp{
+      from{transform:translateY(0) scale(.9);opacity:.6}
+      to{transform:translateY(-110vh) scale(1.2);opacity:0}
+    }
+  </style>
+</head>
+<body>
+  <header class="reveal header-reveal">
+    <div class="avatar">🎂</div>
+    <h1>Happy Birthday</h1>
+    <div class="subtitle">Benzx💐</div>
+
+    <div class="player">
+      <div style="font-size:12px;margin-bottom:6px">🎧 เพลงนี้อยากให้ฟัง</div>
+      <audio controls preload="metadata" playsinline controlslist="nodownload" style="width:100%">
+        <source src="bc47723d-98c4-40c1-b848-69128f9b9a70.mp3" type="audio/mpeg">
+        เบราว์เซอร์ของคุณไม่รองรับการเล่นเพลง
+      </audio>
+      <div style="font-size:11px;margin-top:6px">เปิดแล้วนึกถึงคุณ 💗</div>
+    </div>
+  </header>
+
+  <div class="camera">📷</div>
+
+  <section class="carousel reveal fade-left">
+    <div class="slides" id="slides">
+      <div class="slide"><img src="Gemini_Generated_Image_74wawc74wawc74wa.png" alt="photo1" /></div>
+      <div class="slide"><img src="IMG_20250106_124329_262.jpg" alt="photo2" /></div>
+      <div class="slide"><img src="IMG_20250309_193243_390.jpg" alt="photo3" /></div>
+      <div class="slide"><img src="IMG_20251022_223708_566.jpg" alt="photo4" /></div>
+    </div>
+          <button class="nav prev" onclick="move(-1)">‹</button>
+    <button class="nav next" onclick="move(1)">›</button>
+  </section>
+
+  <div class="dots" id="dots">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  
+
+  <section class="story reveal">
+    <p>
+      สุขสันต์วันเกินที่รัก! ปีนี้อายุ25ปี<br><br>
+      แล้วขอให้วันเกิดปีนี้เป็นปีที่ดีที่สุดสำหลับเอง เต็มไปด้วยความสุข ความสำเร็จ
+      และสิ่งดีๆที่จะเกิดขึ้นในทุกๆวัน ขอให้เองมีสุขภาพดี และก้าวไปสู่ความฝันที่ตั้งใจไว้
+      ทุกสิ่งที่เองตั้งใจจะประสบความสำเร็จเสมอไป<br><br>
+      รักเองมากๆนะ🤍💐
+    </p>
+  </section>
+
+  <footer class="reveal">
+    จาก Beam💗
+  </footer>
+
+  <!-- effects -->
+  <script>
+    // floating hearts (auto – soft)
+    let heartCount = 0;
+    const MAX_HEARTS = 6; // จำกัดจำนวนหัวใจบนจอ
+    function createHeart(){
+      if(heartCount >= MAX_HEARTS) return;
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = ['💗','💕'][Math.floor(Math.random()*2)];
+      heart.style.left = Math.random()*100 + 'vw';
+      heart.style.fontSize = 14 + Math.random()*4 + 'px';
+      heart.style.animationDuration = 9 + Math.random()*3 + 's';
+      document.body.appendChild(heart);
+      heartCount++;
+      setTimeout(()=>{ heart.remove(); heartCount--; },12000);
+    }
+    setInterval(createHeart, 2000);
+
+    // confetti on load
+    for(let i=0;i<24;i++){
+      setTimeout(()=>{
+        const c = document.createElement('div');
+        c.textContent = ['🎉','✨','🎊'][Math.floor(Math.random()*3)];
+        c.style.position='fixed';
+        c.style.top='-20px';
+        c.style.left=Math.random()*100+'vw';
+        c.style.fontSize='18px';
+        c.style.animation='floatUp 5s linear forwards';
+        c.style.pointerEvents='none';
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),5000);
+      }, i*120);
+    }
+  </script>
+
+  <script>
+    let index = 0;
+    const slides = document.getElementById('slides');
+    const dots = document.querySelectorAll('.dot');
+    function move(step){
+      index = (index + step + dots.length) % dots.length;
+      slides.style.transform = `translateX(-${index*100}%)`;
+      dots.forEach((d,i)=>d.classList.toggle('active', i===index));
+    }
+  </script>
+
+  <!-- scroll reveal -->
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('show');
+          observer.unobserve(entry.target);
+        }
+      });
+    },{threshold:0.15});
+
+    reveals.forEach(el=>observer.observe(el));
+  </script>
+</body>
+</html>
