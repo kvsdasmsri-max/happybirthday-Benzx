@@ -1,145 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Happy Birthday 🎉</title>
-  <link href="https://fonts.googleapis.com/css2?family=Itim&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday</title>
   <style>
-    :root{
-      --bg:#fff7fb;
-      --pink:#ffb6c9;
-      --lav:#e6d9ff;
-      --text:#555;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:'Itim','Poppins',sans-serif;
-      color:var(--text);
-      background:linear-gradient(180deg,var(--bg),#ffffff);
-      text-align:center;
-      -webkit-tap-highlight-color: transparent;
-    }
-    header{
-      padding:32px 16px 16px;
-    }
-    .avatar{
-      width:64px;height:64px;
-      border-radius:50%;
-      background:#ffe3ec;
-      display:flex;align-items:center;justify-content:center;
-      margin:0 auto 10px;
-      font-size:30px;
-    }
-    h1{
-      margin:0;
-      font-weight:600;
-      font-size:26px;
-      color:#6aa7ff;
-    }
-    .subtitle{
-      margin-top:6px;
-      font-size:13px;
-    }
-    .player{
-      margin:16px auto;
-      max-width:100%;
-      background:#fff;
-      border-radius:14px;
-      box-shadow:0 6px 20px rgba(0,0,0,.08);
-      padding:12px;
-    }
-    .player audio{width:100%}
-    .camera{font-size:20px;margin:12px 0}
-    .carousel{
-      width:100%;
-      max-width:100%;
-      margin:0 auto;
-      position:relative;
-      overflow:hidden;
-      border-radius:14px;
-      background:#eee;
-    }
-    .slides{
-      display:flex;
-      transition:transform .35s ease;
-      will-change:transform;
-    }
-    .slide{
-      min-width:100%;
-      height:240px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:36px;
-      color:#aaa;
-      overflow:hidden;
-    }
-    .slide img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .nav{
-      position:absolute;top:50%;transform:translateY(-50%);
-      background:rgba(255,255,255,.9);
-      border:none;border-radius:50%;
-      width:32px;height:32px;
-      cursor:pointer;
-      font-size:18px;
-      line-height:0;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .prev{left:6px}
-    .next{right:6px}
-    .dots{
-      display:flex;gap:6px;justify-content:center;
-      margin:8px 0 24px;
-    }
-    .dot{
-      width:8px;height:8px;border-radius:50%;background:#ccc;
-      cursor:pointer;
-    }
-    .dot.active{background:#888}
-    .story{
-      max-width:680px;
-      margin:0 auto 32px;
-      padding:0 16px;
-      font-size:14px;
-      line-height:1.8;
-    }
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;margin:0;padding:18px;background:#fff;color:#111}
+    header{max-width:720px;margin:0 auto 18px}
+    .avatar{font-size:48px}
+    .subtitle{font-size:14px;color:#666}
 
-    /* scroll animation */
-    .reveal{
-      opacity:0;
-      transform:translateY(24px);
-    }
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s cubic-bezier(.2,.6,.2,1);will-change:opacity, transform}
     .reveal.show{opacity:1;transform:none;transition:all .7s cubic-bezier(.2,.6,.2,1)}
-
-    /* softer for top section */
-    .header-reveal{
-      transform:translateY(18px);
-      transition:opacity .9s ease, transform .9s ease;
-    }
+    /* keep separate handling for slide-left/right */
     .reveal.fade-left{ transform:translateX(-24px); }
     .reveal.fade-right{ transform:translateX(24px); }
+    .reveal.show.fade-left,
+    .reveal.show.fade-right{ transform:translateX(0); }
 
-    footer{
-      margin-top:32px;
-      padding:14px 8px;
-      background:linear-gradient(90deg,var(--pink),var(--lav));
-      color:#fff;
-      font-size:12px;
-    }
+    /* softer for top section */
+    .header-reveal{ transform:translateY(18px); transition:opacity .9s ease, transform .9s ease; }
 
-    /* tablet & up */
+    /* slideshow */
+    .carousel{max-width:720px;margin:10px auto}
+    .slides{display:flex;overflow:hidden}
+    .slide{flex:0 0 100%;height:240px;display:flex;align-items:center;justify-content:center}
+    .slide img{max-width:100%;max-height:100%;object-fit:cover;border-radius:8px}
+
     @media (min-width:768px){
       h1{font-size:32px}
-      .slideshow{height:400px}
+      .slide{height:400px}
       .player{max-width:360px}
     }
+
+    footer{margin-top:32px;padding:14px 8px;color:#444}
+
+    /* floating hearts */
+    .heart{position:fixed;bottom:-24px;font-size:16px;animation:floatUp var(--dur,10s) linear forwards;pointer-events:none;opacity:.8;filter:drop-shadow(0 2px 6px rgba(0,0,0,.08))}
+    @keyframes floatUp{from{transform:translateY(0) scale(.9);opacity:.8}to{transform:translateY(-110vh) scale(1.2);opacity:0}}
+
+    /* confetti boxes */
+    .confetti{position:fixed;top:-20px;pointer-events:none;font-size:18px;animation:confettiFloat 5s linear forwards}
+    @keyframes confettiFloat{from{transform:translateY(0) rotate(0deg);opacity:1}to{transform:translateY(110vh) rotate(360deg);opacity:0}}
+
+    /* dots */
+    .dots{display:flex;gap:8px;margin-top:8px;justify-content:center}
+    .dot{width:10px;height:10px;border-radius:50%;background:#ddd;cursor:pointer}
+    .dot.active{background:#333}
+
+    /* controls (small) */
+    .controls{display:flex;justify-content:center;gap:8px;margin-top:8px}
+    .player{margin-top:12px}
   </style>
 </head>
 <body>
@@ -152,12 +63,11 @@
       <div style="font-size:12px;margin-bottom:6px">เพลงประกอบ</div>
       <audio controls preload="metadata" playsinline controlsList="nodownload" style="width:100%">
         <source src="https://raw.githubusercontent.com/kvsdasmsri-max/happybirthday-Benzx/main/bc47723d-98c4-40c1-b848-69128f9b9a70.mp3" type="audio/mpeg">
+        เบราว์เซอร์ของคุณไม่รองรับการเล่นเพลง
       </audio>
       <div style="font-size:11px;margin-top:6px">ขอให้มีความสุขมากๆ</div>
     </div>
   </header>
-
-  <div class="camera">📷</div>
 
   <section class="carousel reveal fade-left">
     <div class="slides" id="slides">
@@ -166,27 +76,19 @@
       <div class="slide"><img src="https://pic.in.th/image/IMG-20250309-193243-390.nnmdon" alt="photo3" /></div>
       <div class="slide"><img src="https://pic.in.th/image/IMG-20251022-223708-566.nnmMKM" alt="photo4" /></div>
     </div>
-    <button class="nav prev" id="prevBtn" aria-label="Previous slide">‹</button>
-    <button class="nav next" id="nextBtn" aria-label="Next slide">›</button>
-  </section>
 
-  <div class="dots" id="dots" aria-hidden="false"></div>
-
-  <section class="story reveal">
-    <p>
-      สุขสันต์วันเกิดที่รัก! ปีนี้อายุ 25 ปี<br><br>
-      ขอให้วันเกิดปีนี้เป็นปีที่ดีที่สุดของตัวเอง เต็มไปด้วยความสุข
-      และสิ่งดีๆ ที่จะเกิดขึ้นในทุกๆ วัน ขอให้มีสุขภาพแข็งแรง
-      และก้าวไปสู่ความสำเร็จในทุกความตั้งใจเสมอไป<br><br>
-      รักมากๆ นะ 🤍💐
-    </p>
+    <div class="controls">
+      <button id="prevBtn">◀</button>
+      <button id="nextBtn">▶</button>
+    </div>
+    <div id="dots" class="dots" aria-hidden="false"></div>
   </section>
 
   <footer class="reveal">
     ขอบคุณที่อยู่ด้วยกันนะ
   </footer>
 
-  <!-- effects -->
+  <!-- effects + slider script -->
   <script>
     // floating hearts (soft effect)
     let heartCount = 0;
@@ -197,11 +99,11 @@
       heart.className = 'heart';
       heart.textContent = '💖';
       heart.style.left = Math.random()*100 + 'vw';
+      heart.style.setProperty('--dur', (9 + Math.floor(Math.random()*3)) + 's');
       heart.style.fontSize = 14 + Math.floor(Math.random()*20) + 'px';
-      heart.style.animationDuration = 9 + Math.floor(Math.random()*3) + 's';
       document.body.appendChild(heart);
       heartCount++;
-      setTimeout(()=>{ heart.remove(); heartCount--; },12000);
+      setTimeout(()=>{ if(heart.parentNode){ heart.remove(); heartCount--; } },12000);
     }
     setInterval(createHeart, 2000);
 
@@ -209,56 +111,47 @@
     for(let i=0;i<24;i++){
       setTimeout(()=>{
         const c = document.createElement('div');
+        c.className = 'confetti';
         c.textContent = ['🎉','✨','🎈','💐'][Math.floor(Math.random()*4)];
-        c.style.position='fixed';
-        c.style.top = '-20px';
         c.style.left = Math.random()*100 + 'vw';
-        c.style.fontSize = '18px';
-        c.style.pointerEvents='none';
+        c.style.fontSize = (12 + Math.floor(Math.random()*10)) + 'px';
         document.body.appendChild(c);
-        setTimeout(()=>c.remove(),5000);
-      }, i*120);
+        setTimeout(()=>{ if(c.parentNode) c.remove(); },5000);
+      }, Math.random()*1200);
     }
-  </script>
 
-  <script>
-    // Slider: สร้าง dots ไดนามิกตามจำนวน slide และทำการย้าย slide
+    // slider
     const slidesEl = document.getElementById('slides');
     const dotsContainer = document.getElementById('dots');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
     let index = 0;
+    function getSlideCount(){ return slidesEl ? slidesEl.children.length : 0; }
 
-    function getSlideCount() {
-      return slidesEl ? slidesEl.children.length : 0;
-    }
-
-    function createDots() {
+    function createDots(){
       const count = getSlideCount();
-      if (!dotsContainer) return;
+      if(!dotsContainer) return;
       dotsContainer.innerHTML = '';
-      for (let i = 0; i < count; i++) {
+      for(let i=0;i<count;i++){
         const d = document.createElement('div');
-        d.className = 'dot' + (i === 0 ? ' active' : '');
+        d.className = 'dot' + (i===0 ? ' active' : '');
         d.dataset.index = i;
-        d.setAttribute('role', 'button');
-        d.setAttribute('tabindex', '0');
-        d.addEventListener('click', () => moveTo(Number(d.dataset.index)));
-        d.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            moveTo(Number(d.dataset.index));
-          }
-        });
+        d.setAttribute('role','button');
+        d.setAttribute('tabindex','0');
+        d.addEventListener('click', ()=> moveTo(Number(d.dataset.index)));
+        d.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); moveTo(Number(d.dataset.index)); } });
         dotsContainer.appendChild(d);
       }
     }
 
     function updateSlider(){
-      const dots = dotsContainer ? dotsContainer.querySelectorAll('.dot') : [];
-      if(slidesEl) slidesEl.style.transform = `translateX(-${index*100}%)`;
-      dots.forEach((d,i)=> d.classList.toggle('active', i===index));
+      const count = getSlideCount();
+      if(count === 0) return;
+      slidesEl.style.transform = `translateX(-${index*100}%)`;
+      // update dots
+      const dots = dotsContainer ? dotsContainer.children : [];
+      for(let i=0;i<dots.length;i++) dots[i].classList.toggle('active', i===index);
     }
 
     function move(step){
@@ -277,22 +170,17 @@
     if(prevBtn) prevBtn.addEventListener('click', ()=>move(-1));
     if(nextBtn) nextBtn.addEventListener('click', ()=>move(1));
 
-    // เริ่มต้น
+    // initialize
     createDots();
     updateSlider();
+    // setInterval(()=>move(1), 5000); // optional autoplay
 
-    // Optional autoplay (commented)
-    // setInterval(()=>move(1), 5000);
-  </script>
-
-  <!-- scroll reveal -->
-  <script>
-    const reveals = document.querySelectorAll('.reveal');
+    // reveal on scroll
+    const reveals = Array.from(document.querySelectorAll('.reveal'));
     const observer = new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
         if(entry.isIntersecting){
           entry.target.classList.add('show');
-          observer.unobserve(entry.target);
         }
       });
     },{threshold:0.15});
